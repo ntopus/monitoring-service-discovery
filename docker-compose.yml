@@ -1,0 +1,60 @@
+version: "3"
+services:
+  consul:
+    image: consul:latest
+    ports:
+    - "8500:8500"
+    networks:
+      back:
+
+  registrator:
+    image: gliderlabs/registrator:latest
+    command: "-internal consul://consul:8500"
+    depends_on:
+    - consul
+    volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+    networks:
+      back:
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      back:
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      back:
+
+  demo_service_1:
+    image: monitoring:0.3.0
+    ports:
+      - "2112:2112"
+    networks:
+      back:
+    labels:
+        "SERVICE_NAME": "demo_service_1"
+        "SERVICE_TAGS": "metric"
+
+  demo_service_2:
+    image: monitoring:0.3.0
+    ports:
+      - "2113:2112"
+    networks:
+      back:
+    labels:
+        "SERVICE_NAME": "demo_service_2"
+        "SERVICE_TAGS": "metric"
+
+networks:
+  back:
