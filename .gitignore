@@ -1,0 +1,6 @@
+.idea
+vendor
+glide.lock
+bin
+data_dir
+temp
