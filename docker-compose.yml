@@ -37,7 +37,7 @@ services:
       back:
 
   demo_service_1:
-    image: monitoring:0.3.0
+    build: .
     ports:
       - "2112:2112"
     networks:
@@ -47,7 +47,7 @@ services:
         "SERVICE_TAGS": "metric"
 
   demo_service_2:
-    image: monitoring:0.3.0
+    build: .
     ports:
       - "2113:2112"
     networks:
